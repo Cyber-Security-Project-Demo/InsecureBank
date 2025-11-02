@@ -138,7 +138,7 @@ const Dashboard = () => {
       <aside className="fixed left-0 top-0 h-screen w-64 bg-linear-to-b from-blue-900 via-blue-800 to-indigo-900 shadow-xl z-40 flex flex-col">
         {/* Logo/Brand */}
         <div className="p-6 border-b border-blue-700">
-          <h1 className="text-2xl font-bold text-white">SecureBank</h1>
+          <h1 className="text-2xl font-bold text-white">InsecureBank</h1>
           <p className="text-blue-200 text-sm mt-1">Dashboard Portal</p>
         </div>
 

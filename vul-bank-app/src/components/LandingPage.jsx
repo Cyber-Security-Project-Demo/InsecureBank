@@ -26,7 +26,7 @@ const LandingPage = () => {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <div className="shrink-0">
-                <h1 className="text-2xl font-bold text-white">SecureBank</h1>
+                <h1 className="text-2xl font-bold text-white">InsecureBank</h1>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -54,7 +54,7 @@ const LandingPage = () => {
             Your Trusted Financial Partner
           </h1>
           <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto">
-            Experience secure and reliable banking services with SecureBank. 
+            Experience secure and reliable banking services with InsecureBank. 
             Manage your finances with confidence.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -79,7 +79,7 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Why Choose SecureBank?
+              Why Choose InsecureBank?
             </h2>
             <p className="text-xl text-blue-100">
               Modern banking solutions for your financial needs
@@ -129,7 +129,7 @@ const LandingPage = () => {
       <footer className="bg-black/20 border-t border-white/20 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center text-blue-100">
-            <p>&copy; 2025 SecureBank. All rights reserved.</p>
+            <p>&copy; 2025 InsecureBank. All rights reserved.</p>
             <p className="mt-2 text-sm">Trusted financial services since 2010</p>
           </div>
         </div>

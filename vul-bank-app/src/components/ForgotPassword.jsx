@@ -48,7 +48,7 @@ const ForgotPassword = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <Link to="/" className="flex justify-center">
-            <h2 className="text-3xl font-bold text-white">SecureBank</h2>
+            <h2 className="text-3xl font-bold text-white">InsecureBank</h2>
           </Link>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             Reset your password
