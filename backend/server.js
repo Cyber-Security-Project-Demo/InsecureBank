@@ -7,6 +7,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import session from 'express-session';
 import { exec } from 'child_process';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const PORT = 5000;
@@ -31,34 +35,25 @@ app.use(session({
 
 // Database connection - INTENTIONALLY VULNERABLE
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: '', // No password - vulnerable
-  database: 'vulnerable_bank',
-  port: 3306
+  host: process.env.MYSQL_ADDON_HOST || 'localhost',
+  user: process.env.MYSQL_ADDON_USER || 'root',
+  password: process.env.MYSQL_ADDON_PASSWORD || '',
+  database: process.env.MYSQL_ADDON_DB || 'vulnerable_bank',
+  port: process.env.MYSQL_ADDON_PORT || 3306
 };
 
 let db;
 
 async function connectDB() {
   try {
-    // First try to connect without database to create it
-    const tempConfig = { ...dbConfig };
-    delete tempConfig.database;
-    
-    db = await mysql.createConnection(tempConfig);
-    console.log('Connected to MySQL server');
-    
-    // Create database if it doesn't exist
-    await db.execute('CREATE DATABASE IF NOT EXISTS vulnerable_bank');
-    await db.end();
-    
-    // Now connect to the specific database
+    // Connect to database using environment variables
     db = await mysql.createConnection(dbConfig);
-    console.log('Connected to vulnerable_bank database');
+    console.log('Connected to MySQL database');
+    
+    console.log('Database connection successful!');
   } catch (error) {
     console.error('Database connection error:', error.message);
-    console.log('Please ensure XAMPP MySQL is running and try again');
+    console.log('Please check your database credentials in .env file and try again');
     process.exit(1);
   }
 }
@@ -70,55 +65,9 @@ async function initializeDatabase() {
       throw new Error('Database connection not established');
     }
     
-    // Users table
-    await db.execute(`
-      CREATE TABLE IF NOT EXISTS users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        full_name VARCHAR(100) NOT NULL,
-        balance DECIMAL(15, 2) DEFAULT 1000.00,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    // Database tables should already exist from manual-db-setup.sql import
+    console.log('Database tables ready (imported from manual-db-setup.sql)');
     
-    // Transactions table
-    await db.execute(`
-      CREATE TABLE IF NOT EXISTS transactions (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
-        type ENUM('deposit', 'withdraw', 'transfer') NOT NULL,
-        amount DECIMAL(15, 2) NOT NULL,
-        recipient_id INT DEFAULT NULL,
-        description TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (recipient_id) REFERENCES users(id)
-      )
-    `);
-
-    // Insert demo users with weak passwords
-    const demoUsers = [
-      { username: 'admin', email: 'admin@bank.com', password: 'admin123', full_name: 'Administrator', balance: 50000 },
-      { username: 'john_doe', email: 'john@example.com', password: 'password', full_name: 'John Doe', balance: 5000 },
-      { username: 'jane_smith', email: 'jane@example.com', password: '123456', full_name: 'Jane Smith', balance: 3000 },
-      { username: 'bob_wilson', email: 'bob@example.com', password: 'qwerty', full_name: 'Bob Wilson', balance: 2000 }
-    ];
-
-    for (const user of demoUsers) {
-      try {
-        const hashedPassword = await bcrypt.hash(user.password, 10);
-        await db.execute(
-          'INSERT IGNORE INTO users (username, email, password, full_name, balance) VALUES (?, ?, ?, ?, ?)',
-          [user.username, user.email, hashedPassword, user.full_name, user.balance]
-        );
-      } catch (error) {
-        // User already exists, skip
-        console.log(`User ${user.username} already exists, skipping...`);
-      }
-    }
-
     console.log('Database initialized successfully');
   } catch (error) {
     console.error('Database initialization error:', error.message);
