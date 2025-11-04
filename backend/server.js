@@ -173,13 +173,23 @@ app.get('/api/transactions/:userId', async (req, res) => {
   
   try {
     // VULNERABLE: No access control - IDOR
+    // Fixed: Include both outgoing and incoming transactions
     const [rows] = await db.execute(`
-      SELECT t.*, u2.username as recipient_username 
+      SELECT 
+        t.*, 
+        u2.username as recipient_username,
+        u1.username as sender_username,
+        CASE 
+          WHEN t.user_id = ? THEN 'outgoing'
+          WHEN t.recipient_id = ? THEN 'incoming'
+          ELSE 'other'
+        END as transaction_direction
       FROM transactions t 
       LEFT JOIN users u2 ON t.recipient_id = u2.id 
-      WHERE t.user_id = ? 
+      LEFT JOIN users u1 ON t.user_id = u1.id
+      WHERE t.user_id = ? OR t.recipient_id = ?
       ORDER BY t.created_at DESC
-    `, [userId]);
+    `, [userId, userId, userId, userId]);
     
     res.json(rows);
   } catch (error) {
@@ -270,6 +280,27 @@ app.get('/api/admin/users', async (req, res) => {
     // VULNERABLE: No authentication check
     // For demo purposes, include password column so stored XSS can exfiltrate credentials from search results
     const [rows] = await db.execute('SELECT id, username, email, password, full_name, balance FROM users');
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get all transactions (for admin) - IDOR Vulnerable
+app.get('/api/admin/transactions', async (req, res) => {
+  try {
+    // VULNERABLE: No authentication check - IDOR
+    const [rows] = await db.execute(`
+      SELECT 
+        t.*, 
+        u1.username as sender_username,
+        u2.username as recipient_username
+      FROM transactions t 
+      LEFT JOIN users u1 ON t.user_id = u1.id
+      LEFT JOIN users u2 ON t.recipient_id = u2.id 
+      ORDER BY t.created_at DESC
+    `);
+    
     res.json(rows);
   } catch (error) {
     res.status(500).json({ message: error.message });
