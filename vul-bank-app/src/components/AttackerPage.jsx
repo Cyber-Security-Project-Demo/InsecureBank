@@ -103,7 +103,7 @@ const AttackerPage = ({ onBack }) => {
         {/* Close Button */}
         <button
           onClick={onBack}
-          className="absolute top-3 right-3 z-10 bg-gray-100 hover:bg-gray-200 rounded-full p-1.5 transition duration-300 text-gray-600"
+          className="absolute top-3 right-3 z-10 transition duration-300 text-gray-600"
         >
           ✕
         </button>
@@ -136,14 +136,14 @@ const AttackerPage = ({ onBack }) => {
           
           {/* Countdown Timer */}
           <div className="bg-white bg-opacity-20 rounded-lg p-3 mb-4">
-            <div className="flex items-center justify-center space-x-1 text-yellow-200">
+            <div className="flex items-center justify-center space-x-1 text-gray-600">
               <span className="text-sm">⏰</span>
               <span className="text-sm font-medium">Offer expires in:</span>
             </div>
-            <div className="text-2xl font-bold text-white mt-1">
+            <div className="text-2xl font-bold text-gray-600 mt-1">
               {formatTime(timeLeft)}
             </div>
-            <p className="text-xs text-yellow-200 mt-1">Limited time only!</p>
+            <p className="text-xs text-gray-600 mt-1">Limited time only!</p>
           </div>
           
           {/* CTA Button */}
