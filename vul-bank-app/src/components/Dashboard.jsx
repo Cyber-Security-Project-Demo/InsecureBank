@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [userBalance, setUserBalance] = useState(user?.balance || 0);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showAttackerPopup, setShowAttackerPopup] = useState(false);
+  const [popupCount, setPopupCount] = useState(0);
 
   const refreshUserData = useCallback(async () => {
     try {
@@ -45,13 +46,27 @@ const Dashboard = () => {
   }, [refreshUserData]);
 
   useEffect(() => {
-    // Show attacker popup after 5 seconds
-    const timer = setTimeout(() => {
-      setShowAttackerPopup(true);
-    }, 5000);
+    // Show attacker popup after 5 seconds initially, then every 1 minute for 3 times total
+    if (popupCount >= 3) return; // Stop if already shown 3 times
+
+    let timer;
+    
+    if (popupCount === 0) {
+      // First popup after 5 seconds
+      timer = setTimeout(() => {
+        setShowAttackerPopup(true);
+        setPopupCount(1);
+      }, 5000);
+    } else {
+      // Subsequent popups every 1 minute
+      timer = setTimeout(() => {
+        setShowAttackerPopup(true);
+        setPopupCount(prev => prev + 1);
+      }, 60000); // 60000ms = 1 minute
+    }
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [popupCount]);
 
   const handleLogout = () => {
     logout();
@@ -60,6 +75,10 @@ const Dashboard = () => {
 
   const handleLogoutClick = () => {
     setShowLogoutConfirm(true);
+  };
+
+  const handleCloseAttackerPopup = () => {
+    setShowAttackerPopup(false);
   };
 
   const tabs = [
@@ -237,7 +256,7 @@ const Dashboard = () => {
 
       {/* Attacker Popup Advertisement */}
       {showAttackerPopup && (
-        <AttackerPage onBack={() => setShowAttackerPopup(false)} />
+        <AttackerPage onBack={handleCloseAttackerPopup} />
       )}
 
       {/* Logout Confirmation Modal */}
