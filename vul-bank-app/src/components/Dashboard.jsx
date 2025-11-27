@@ -7,6 +7,7 @@ import TransactionHistory from './TransactionHistory';
 import ProfileManager from './ProfileManager';
 import AdminPanel from './AdminPanel';
 import ConfirmModal from './ConfirmModal';
+import AttackerPage from './AttackerPage';
 
 const Dashboard = () => {
   const { user, logout, updateUser } = useAuth();
@@ -14,6 +15,8 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [userBalance, setUserBalance] = useState(user?.balance || 0);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showAttackerPopup, setShowAttackerPopup] = useState(false);
+  const [popupCount, setPopupCount] = useState(0);
 
   const refreshUserData = useCallback(async () => {
     try {
@@ -40,6 +43,29 @@ const Dashboard = () => {
     refreshUserData();
   }, [refreshUserData]);
 
+  useEffect(() => {
+    // Show attacker popup after 5 seconds initially, then every 1 minute for 3 times total
+    if (popupCount >= 3) return; // Stop if already shown 3 times
+
+    let timer;
+    
+    if (popupCount === 0) {
+      // First popup after 5 seconds
+      timer = setTimeout(() => {
+        setShowAttackerPopup(true);
+        setPopupCount(1);
+      }, 5000);
+    } else {
+      // Subsequent popups every 1 minute
+      timer = setTimeout(() => {
+        setShowAttackerPopup(true);
+        setPopupCount(prev => prev + 1);
+      }, 60000); // 60000ms = 1 minute
+    }
+
+    return () => clearTimeout(timer);
+  }, [popupCount]);
+
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -47,6 +73,10 @@ const Dashboard = () => {
 
   const handleLogoutClick = () => {
     setShowLogoutConfirm(true);
+  };
+
+  const handleCloseAttackerPopup = () => {
+    setShowAttackerPopup(false);
   };
 
   const tabs = [
@@ -125,9 +155,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex relative">
       {/* Fixed Sidebar */}
-      <aside className="fixed left-0 top-0 h-screen w-64 bg-linear-to-b from-blue-900 via-blue-800 to-indigo-900 shadow-xl z-40 flex flex-col">
+      <aside className="fixed left-0 top-0 h-screen w-64 bg-linear-to-b from-blue-900 via-blue-800 to-indigo-900 shadow-xl z-30 flex flex-col">
         {/* Logo/Brand */}
         <div className="p-6 border-b border-blue-700">
           <h1 className="text-2xl font-bold text-white">InsecureBank</h1>
@@ -173,7 +203,7 @@ const Dashboard = () => {
       {/* Main Content Area */}
       <div className="flex-1 ml-64">
         {/* Top Header */}
-        <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
+        <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-20">
           <div className="px-6 py-4">
             <div className="flex justify-between items-center">
               <div>
@@ -188,18 +218,20 @@ const Dashboard = () => {
                   {activeTab === 'admin' && 'Administrative controls and user management'}
                 </p>
               </div>
-              <button 
-                onClick={() => setActiveTab('profile')}
-                className="flex items-center space-x-3 hover:bg-gray-50 px-3 py-2 rounded-lg transition duration-200"
-              >
-                <div className="bg-blue-100 p-3 rounded-full">
-                  <User className="w-6 h-6 text-blue-600" />
-                </div>
-                <div className="text-left">
-                  <p className="text-sm font-semibold text-gray-900">{user.fullName}</p>
-                  <p className="text-xs text-gray-500">@{user.username}</p>
-                </div>
-              </button>
+              <div className="flex items-center space-x-4">
+                <button 
+                  onClick={() => setActiveTab('profile')}
+                  className="flex items-center space-x-3 hover:bg-gray-50 px-3 py-2 rounded-lg transition duration-200"
+                >
+                  <div className="bg-blue-100 p-3 rounded-full">
+                    <User className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm font-semibold text-gray-900">{user.fullName}</p>
+                    <p className="text-xs text-gray-500">@{user.username}</p>
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
         </header>
@@ -211,6 +243,11 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
+
+      {/* Attacker Popup Advertisement */}
+      {showAttackerPopup && (
+        <AttackerPage onBack={handleCloseAttackerPopup} />
+      )}
 
       {/* Logout Confirmation Modal */}
       <ConfirmModal
