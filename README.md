@@ -58,21 +58,21 @@
         <img src="https://github.com/Pathum-Vimukthi-Kumara.png" width="100px;" alt="Pathum Vimukthi Kumara"/><br />
         <sub><b>Pathum Vimukthi Kumara</b></sub>
       </a><br />
-      <sub>Full-Stack Developer</sub>
+      <sub>Project Leader and Cyber Security Engineer</sub>
     </td>
     <td align="center">
       <a href="https://github.com/Yrcd27">
         <img src="https://github.com/Yrcd27.png" width="100px;" alt="Yasiru Pandigama"/><br />
         <sub><b>Yasiru Pandigama</b></sub>
       </a><br />
-      <sub>Frontend Development</sub>
+      <sub>Full Stack Developer</sub>
     </td>
     <td align="center">
       <a href="https://github.com/Sandaru-Lakmika">
         <img src="https://github.com/Sandaru-Lakmika.png" width="100px;" alt="Sandaru Lakmika"/><br />
         <sub><b>Sandaru Lakmika</b></sub>
       </a><br />
-      <sub>Frontend Development</sub>
+      <sub>Frontend Developer</sub>
     </td>
   </tr>
   <tr>
@@ -104,7 +104,7 @@
         <img src="https://github.com/lakshan-2002.png" width="100px;" alt="Lakshan"/><br />
         <sub><b>Lakshan</b></sub>
       </a><br />
-      <sub>Developer</sub>
+      <sub>Backend Developer</sub>
     </td>
   </tr>
 </table>
