@@ -61,13 +61,6 @@
       <sub>Project Leader and Cyber Security Engineer</sub>
     </td>
     <td align="center">
-      <a href="https://github.com/Yrcd27">
-        <img src="https://github.com/Yrcd27.png" width="100px;" alt="Yasiru Pandigama"/><br />
-        <sub><b>Yasiru Pandigama</b></sub>
-      </a><br />
-      <sub>Full Stack Developer</sub>
-    </td>
-    <td align="center">
       <a href="https://github.com/Sandaru-Lakmika">
         <img src="https://github.com/Sandaru-Lakmika.png" width="100px;" alt="Sandaru Lakmika"/><br />
         <sub><b>Sandaru Lakmika</b></sub>
@@ -82,6 +75,13 @@
         <sub><b>Thisara Samuditha</b></sub>
       </a><br />
       <sub>Developer</sub>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Yrcd27">
+        <img src="https://github.com/Yrcd27.png" width="100px;" alt="Yasiru Pandigama"/><br />
+        <sub><b>Yasiru Pandigama</b></sub>
+      </a><br />
+      <sub>Full Stack Developer</sub>
     </td>
     <td align="center">
       <a href="https://github.com/chanaka-devx">
